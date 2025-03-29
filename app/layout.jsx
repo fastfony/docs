@@ -3,6 +3,7 @@ import { Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import 'nextra-theme-docs/style.css'
 import Image from 'next/image';
+import Script from 'next/script';
 
 export const metadata = {
   title: 'Fastfony Documentation',
@@ -35,10 +36,28 @@ export default async function RootLayout({ children }) {
       suppressHydrationWarning
     >
     <Head
-      // ... Your additional head options
-    >
-      {/* Your additional tags should be passed as `children` of `<Head>` element */}
-    </Head>
+      children={
+        <>
+          <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+          <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+          <link rel="manifest" href="/site.webmanifest"/>
+          <Script id="matomo">
+            {`var _paq = window._paq = window._paq || [];
+            /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+            var u="//matomo.8tier.fr/";
+            _paq.push(['setTrackerUrl', u+'matomo.php']);
+            _paq.push(['setSiteId', '10']);
+            var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+            g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+          })();`}
+          </Script>
+        </>
+      }
+    />
     <body>
     <Layout
       navbar={navbar}
