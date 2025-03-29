@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: ".next/,public/,package.json,package-lock.json"
-          target: "/var/www/docs"
+          target: "/var/www/fastfony/main/docs"
           
       - name: Execute deployment commands
         uses: appleboy/ssh-action@master
