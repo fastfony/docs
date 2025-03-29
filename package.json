@@ -1,0 +1,19 @@
+{
+    "dependencies": {
+        "flexsearch": "^0.8.143",
+        "next": "^15.2.3",
+        "nextra": "^4.2.16",
+        "nextra-theme-docs": "^4.2.16",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0"
+    },
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "start": "next start",
+        "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind"
+    },
+    "devDependencies": {
+        "pagefind": "^1.3.0"
+    }
+}

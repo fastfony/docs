@@ -1,0 +1,157 @@
+# Go to production
+
+## Deployment with Github Actions and SSH commands on linux server
+
+### Pre-requisites
+
+- A server with SSH access
+- A SSH key to access the server
+- Nginx and PHP-FPM on the server
+- A database on the server (SQLite is recommended for development)
+
+### Creation of the Github Actions workflow
+
+1. Create a new file in your project at `.github/workflows/deploy.yml`
+2. Copy the following content into the file:
+
+```yaml
+name: Deployment PROD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Install PHP
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+          tools: composer:v2
+          extensions: mbstring, xml, ctype, iconv, dom, json
+        env:
+          update: true
+      - name: Check PHP Version
+        run: php -v
+
+      # Install backend dependencies (Composer)
+      - name: Validate composer.json and composer.lock
+        run: composer validate
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - name: Install Composer dependencies
+        run: composer install --optimize-autoloader
+
+      # Install Node.js & run build
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      - uses: actions/cache@v4
+        id: npm-cache # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - run: npm install
+      - run: npm run build
+
+      # Prepare .env file for production
+      - name: Make production envfile
+        uses: SpicyPizza/create-envfile@v2.0
+        with:
+          envkey_APP_ENV: prod
+          envkey_APP_DEBUG: false
+          envkey_APP_SECRET: ${{ secrets.APP_SECRET }}
+          envkey_MAILER_DSN: ${{ secrets.MAILER_DSN }}
+          envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          envkey_FEATURE_FLAGS: '''{"users_management":true,"registration":true,"theme_chooser":false,"pages":true,"products":true,"oauth2_server":false}'''
+          file_name: .env.local
+
+      # Copying files and artifacts via SSH
+      - name: Copying files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ''
+          rm: true
+          source: './'
+          target: ${{ vars.REMOTE_TARGET }}
+
+      # Run commands on production
+      - name: Executing remote ssh commands
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ''
+          script: |
+            rsync -a --exclude={'var','temp'} --delete ${{ vars.REMOTE_TARGET }} ${{ vars.REMOTE_TARGET_DEPLOY }}
+            cd ${{ vars.REMOTE_TARGET_DEPLOY }}/PROJECT_NAME
+            php bin/console c:cl
+            sudo chown -R ${{ secrets.REMOTE_USER }}:${{ secrets.REMOTE_USER }} var/*
+            sudo chmod -R 777 var/{cache,log,data.db} public/uploads .env.local
+            php bin/console doctrine:schema:update --dump-sql --force
+            mkdir -p config/jwt
+            openssl genrsa -out config/jwt/private.pem 2048
+            openssl rsa -in config/jwt/private.pem -pubout -out config/jwt/public.pem
+            php -r 'echo "OAUTH_ENCRYPTION_KEY=".base64_encode(random_bytes(32)), PHP_EOL;' >> .env.prod
+```
+
+3. Configure secrets in your Github repository (Settings > Secrets and variables > Actions > New repository secret):
+   - `SSH_PRIVATE_KEY`: Your SSH private key to access the server
+   - `REMOTE_HOST`: The IP address or hostname of your server
+   - `REMOTE_USER`: The username to access the server
+   - `DATABASE_URL`: The database connection string for your production database
+   - `MAILER_DSN`: The DSN for your mailer service
+   - `APP_SECRET`: A random secret key for your application
+
+4. Configure the following variables in your Github repository (Settings > Secrets and variables > Actions > Variables > New repository variable):
+
+   - `REMOTE_TARGET`: The target directory on your server where the application will be build
+   - `REMOTE_TARGET_DEPLOY`: The target directory on your server where the application will be deployed
+
+5. Change the PROJECT_NAME in content and commit the `deploy.yml` file to your repository
+6. Push to the `main` branch to trigger the deployment workflow
+7. Monitor the deployment process in the "Actions" tab of your Github repository
+
+### Database initialization
+
+1. SSH into your server
+2. Navigate to the target directory where the application is deployed
+3. Run the following command to initialize the database:
+
+```bash
+php bin/console doctrine:fixtures:load --group install
+```
+
+### Do the installation process
+
+1. Go to the URL of your application in your web browser
+2. Follow the installation process
+
+Your app is now deployed and ready to use! (but maybe you need to develop it a little bit more...)

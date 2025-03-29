@@ -1,6 +1,6 @@
 # Fastfony documentation
 
-This project is a documentation for Fastfony, a Symfony-based boilerplate and starter kit.
+This project is a documentation for [Fastfony](https://fastfony.com), a Symfony-based boilerplate and starter kit.
 
 It builds with Nextra, a Next.js & MDX based documentation site generator.
 
