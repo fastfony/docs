@@ -15,14 +15,14 @@ const navbar = (
       <>
         <Image src="/favicon-32x32.png" alt="Fastfony icon" width="32" height="32" />
         <span style={{ marginLeft: '.4em', fontWeight: 800 }}>
-        Fastfony Documentation
-      </span>
+          Fastfony Documentation
+        </span>
       </>
     }
-    // ... Your additional navbar options
+    projectLink="https://github.com/fastfony/fastfony"
   />
 )
-const footer = <Footer>MIT {new Date().getFullYear()} © Fastfony.</Footer>
+const footer = <Footer>{new Date().getFullYear()} © Fastfony.</Footer>
 
 export default async function RootLayout({ children }) {
   return (
@@ -43,7 +43,7 @@ export default async function RootLayout({ children }) {
     <Layout
       navbar={navbar}
       pageMap={await getPageMap()}
-      docsRepositoryBase="https://github.com/fastfony/fastfony-docs/tree/main/docs"
+      docsRepositoryBase="https://github.com/fastfony/docs/tree/main/docs"
       footer={footer}
       // ... Your additional layout options
     >

@@ -1,3 +1,72 @@
-# Welcome to Fastfony Docs
+# Get started with Fastfony
 
-Hello, world!
+Fastfony is a Symfony boilerplate and starter kit that provides a solid foundation for building web applications. It includes a variety of features and tools to help you get started quickly and efficiently.
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed on your machine:
+
+1. [PHP](https://www.php.net/manual/en/install.php),
+2. [Composer](https://getcomposer.org),
+3. [Symfony CLI](https://symfony.com/download),
+4. [Node](https://nodejs.org/en/download),
+5. [Docker & Docker Compose](https://docs.docker.com/compose/install/) and
+6. [Taskfile](https://taskfile.dev/installation/)
+
+Be careful to the minimum versions requirements:
+
+- PHP: 8.2
+- Symfony CLI: 5.11
+- Node: 22 with npm and _npx_
+
+## Create new project
+
+We recommend creating a new development project on a local development machine and follow the "Go to production" (soon available...) instructions to deploy it on a production server.
+
+You can create a new project using one of the following methods:
+
+### Solution 1 : From archive
+
+Extract the download archive and in the root of the project, run the following command:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+If you want synchronize your new project with the template repository of Fastfony or Fastfony Pro, run the following command:
+
+For Fastfony:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- https://github.com/fastfony/fastfony
+```
+
+For Fastfony Pro:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- git@github.com:fastfony/fastfony-pro.git
+```
+
+And then resolve conflicts, if any, and run `git cherry-pick --continue`.
+
+Then, run the following command:
+
+```bash
+task start
+```
+
+### Solution 2 : From template repositories
+
+Go on github in order to create your own repository from the template, with this link:
+* for Fastfony: https://github.com/new?template_name=fastfony&template_owner=fastfony
+* for Fastfony Pro: https://github.com/new?template_name=fastfony-pro&template_owner=fastfony
+
+You can claim your access to the Fastfony Pro repository by sending e-mail to claim-repo-access@fastfony.com.
+
+Then clone the repository and in the root of the project, run the following command:
+
+```bash
+task start
+```
