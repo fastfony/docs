@@ -1,0 +1,28 @@
+# OAuth2 Server
+
+Fastfony comes with a built-in OAuth2 server that allows you to authenticate users and applications using various OAuth2 grant types.
+This is useful for securing your API and allowing third-party applications to access it securely.
+With users management it can also be used to authenticate users in yours applications.
+
+## Configuration
+
+If not already done, you can configure the OAuth2 server by running the following command:
+
+```bash
+task oauth2-server-init
+```
+
+## Test OAuth2 server with Swagger UI
+
+Steps :
+
+1. Create a new client in OAuth2 server admin section : https://fastfony.wip/admin/client-crud
+2. Indicate this redirect URI string for SwaggerUI : https://fastfony.wip/bundles/apiplatform/swagger-ui/oauth2-redirect.html
+3. Affect the new OAuth client to users
+4. Go to swagger UI : https://fastfony.wip/api/docs
+5. Click on the Authorize button
+6. Fill in the form with the client identifier and secret
+7. Select the scope you want to use and you have configured in the client
+8. Click on the Authorize button
+9. Try the API with the OAuth2 authentication
+

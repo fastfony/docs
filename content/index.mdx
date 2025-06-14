@@ -1,8 +1,23 @@
-# Get started with Fastfony
+# Get started with [Fastfony](https://fastfony.com)
 
-[Fastfony](https://fastfony.com) is a [Symfony](https://symfony.com) boilerplate and starter kit that provides a solid foundation for building web applications. It includes a variety of features and tools to help you get started quickly and efficiently.
+[Fastfony](https://fastfony.com) is a [Symfony](https://symfony.com) boilerplate and starter kit that provides a solid foundation for building web applications or API. It includes a variety of features and tools to help you get started quickly and efficiently.
 
-## Prerequisites
+This starter kit is free and open-source, but pro features for commercial use are available with a [license](https://fastfony.com/pricing). It is designed to be easy to use and customize, so you can focus on building your Symfony application without worrying about the underlying infrastructure.
+
+## How to use the boilerplate or the starter kit
+
+You can use Fastfony as a boilerplate or as a starter kit:
+- **Boilerplate**: Fastfony comes with a technology stack (PHP, Symfony, Doctrine, Webpack Encore, Tailwind CSS, DaisyUI, Vue 3, etc.) but you can use other technologies if you want. It provides a solid foundation for your project, but you can customize it as needed. You can remove or add according to your requirements.
+- **Starter-kit** : Fastfony comes with set of features (user management, product management, API, etc.) that you can use as a starting point for your project. You can customize it to fit your needs.
+
+Fastfony may seem like a big project with a lot of stuff you won't need, but no matter, if you don't need certain features don't use them or remove them!
+
+This boilerplate and starter kit build with PHP is designed to save you time when starting a new project with Symfony.
+
+- Check the [technology stack](/technology-stack) used in Fastfony.
+- Discover the [features](/features) of Fastfony and how to use it in your project.
+
+## Prerequisites and installation
 
 Before you begin, ensure you have the following installed on your machine:
 
@@ -19,54 +34,4 @@ Be careful to the minimum versions requirements:
 - Symfony CLI: 5.11
 - Node: 22 with npm and _npx_
 
-## Create new project
-
-We recommend creating a new development project on a local development machine and follow the "Go to production" (soon available...) instructions to deploy it on a production server.
-
-You can create a new project using one of the following methods:
-
-### Solution 1 : From archive
-
-Extract the download archive and in the root of the project, run the following command:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-```
-
-If you want synchronize your new project with the template repository of Fastfony or Fastfony Pro, run the following command:
-
-For Fastfony:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- https://github.com/fastfony/fastfony
-```
-
-For Fastfony Pro:
-
-```bash
-curl -sSL https://raw.githubusercontent.com/coopTilleuls/template-sync/main/template-sync.sh | sh -s -- git@github.com:fastfony/fastfony-pro.git
-```
-
-And then resolve conflicts, if any, and run `git cherry-pick --continue`.
-
-Then, run the following command:
-
-```bash
-task start
-```
-
-### Solution 2 : From template repositories
-
-Go on github in order to create your own repository from the template, with this link:
-* for Fastfony: https://github.com/new?template_name=fastfony&template_owner=fastfony
-* for Fastfony Pro: https://github.com/new?template_name=fastfony-pro&template_owner=fastfony
-
-You can claim your access to the Fastfony Pro repository by sending e-mail to claim-repo-access@fastfony.com.
-
-Then clone the repository and in the root of the project, run the following command:
-
-```bash
-task start
-```
+Then, proceed to [install & start](/for-developers/install-start) Fastfony.

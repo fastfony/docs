@@ -1,0 +1,23 @@
+# Install and start Fastfony
+
+## Create new project
+
+We recommend creating a new development project on a local development machine and follow the [Go to production](for-developers/go-to-production) instructions to deploy it on a production server.
+
+1. Go on [Fastfony Github template link ](https://github.com/new?template_name=fastfony&template_owner=fastfony) in order to create your own repository from the template.
+2. Clone the repository to your local machine using the command:
+
+```bash
+git clone https://github.com/your-username/your-repo-name.git
+```
+3. Go in the new repo directory `cd your-repo-name`
+
+## Start Fastfony
+
+1. Run `task start` and follow instructions in console.
+2. If you want use OAuth2 server run `task oauth2-server-init`
+3. Enjoy!
+
+By default, Fastfony is available if you use [Symfony local proxy](https://symfony.com/doc/current/setup/symfony_server.html#setting-up-the-local-proxy) at [https://fastfony.wip/](https://fastfony.wip/) or [https://localhost:9876](https://localhost:9876) if not.
+
+_You can change the hostname or the port by modifying the `.symfony.local.yaml` file._
