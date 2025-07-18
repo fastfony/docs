@@ -1,0 +1,162 @@
+# OAuth2 clients
+
+Fastfony provides a simple way to implement OAuth2 clients in your Symfony application. This is useful for integrating with third-party services that require OAuth2 authentication and for offer login with third-party services.
+
+## Usage
+
+Fastfony use [knpuniversity/oauth2-client-bundle](https://github.com/knpuniversity/oauth2-client-bundle) to manage OAuth2 clients. It is already installed and configured in Fastfony, so you can use it directly in your application.
+
+Two providers from [League](https://github.com/thephpleague) are already configured in Fastfony: [Google](https://github.com/thephpleague/oauth2-google) and [Github](https://github.com/thephpleague/oauth2-github), but you can add more providers as needed.
+
+In the admin interface, on settings screen, you can manage Google and Github connection : just provide your OAuth2 credentials (client ID and secret) to enable the connection.
+
+## Adding a new OAuth2 client
+
+You can add a new [OAuth2 client library](https://github.com/knpuniversity/oauth2-client-bundle?tab=readme-ov-file#step-1-download-the-client-library) for support new third-party services.
+
+For Facebook by example, you can add them by following these steps:
+
+```bash
+composer require league/oauth2-facebook
+```
+
+Create an app on [Facebook for developers](https://developers.facebook.com/) and get your client ID and secret.
+
+Indicate the valid OAuth redirect URL: (your domain name followed by `/connect/facebook/check`, we will create this route later in Fastfony).
+
+Then, add the following configuration in `config/packages/knpu_oauth2_client.yaml`:
+
+```yaml
+knpu_oauth2_client:
+    clients:
+        facebook:
+            type: facebook
+            client_id: '%env(FACEBOOK_CLIENT_ID)%'
+            client_secret: '%env(FACEBOOK_CLIENT_SECRET)%'
+            redirect_route: connect_facebook_check
+            graph_api_version: v2.12
+```
+
+Finally, add the environment variables in your `.env` file:
+
+```dotenv
+FACEBOOK_CLIENT_ID=your_facebook_client_id
+FACEBOOK_CLIENT_SECRET=your_facebook_client_secret
+```
+
+(you can also create Parameter in the admin interface, and use Parameter entity).
+
+Create two controllers to handle the connection and the check:
+
+```php
+# src/Controller/Security/OAuthClient/Facebook/Check.php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller\Security\OAuthClient\Facebook;
+
+use App\Controller\Security\OAuthClient\AbstractCheck;
+use Symfony\Component\Routing\Attribute\Route;
+
+/** @phpstan-ignore symfony.noClassLevelRoute */
+#[Route('/connect/facebook/check', name: 'connect_facebook_check')]
+class Check extends AbstractCheck
+{
+}
+```
+
+```php
+# src/Controller/Security/OAuthClient/Facebook/Connect.php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller\Security\OAuthClient\Facebook;
+
+use App\Controller\Security\OAuthClient\AbstractConnect;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Attribute\Route;
+
+class Connect extends AbstractConnect
+{
+    #[Route('/connect/github', name: 'connect_facebook', methods: ['GET'])]
+    public function __invoke(string $service = 'facebook'): RedirectResponse
+    {
+        $this->scopes = ['public_profile', 'email'];
+
+        return parent::__invoke($service);
+    }
+}
+```
+
+Finally, create new authenticator to handle the Facebook OAuth2 client:
+
+```php
+# src/Security/OAuthClient/FacebookAuthenticator.php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Security\OAuthClient;
+
+class FacebookAuthenticator extends AbstractAuthenticator
+{
+    public function getClientName(): string
+    {
+        return 'facebook';
+    }
+
+    // You can override the AbstractAuthenticator methods to customize the authentication process if needed.
+}
+```
+
+Add it in your `config/packages/security.yaml`:
+
+```yaml
+security:
+    firewalls:
+        main:
+            # ...
+            custom_authenticators:
+                # ...
+                - App\Security\OAuthClient\FacebookAuthenticator
+```
+
+And, add `fromFacebook` in UserFactory class to handle the user find or creation from Facebook OAuth2 client:
+
+```php
+# src/Factory/UserFactory.php
+<?php
+# ...
+    public function fromFacebook(FacebookUser $facebookUser): User
+    {
+        $existingUser = $this->userRepository->findOneBy(['email' => $facebookUser->getEmail()]);
+        if ($existingUser) {
+            return $existingUser;
+        }
+
+        return $this->userRepository->create($facebookUser->getEmail());
+    }
+#...
+```
+
+Now, you can use the Facebook OAuth2 client in your application.
+You can add a link to the connection in your templates:
+
+```twig
+{# templates/security/_oauth_clients.html.twig #}
+
+    {# ... #}
+
+    <a href="{{ path('connect_facebook') }}" class="btn bg-[#1A77F2] text-white border-[#005fd8]" data-turbo="false">
+        <svg aria-label="Facebook logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="white" d="M8 12h5V8c0-6 4-7 11-6v5c-4 0-5 0-5 3v2h5l-1 6h-4v12h-6V18H8z"></path></svg>
+        Facebook
+    </a>
+
+    {# ... #}
+```
+
+---
+
+You can add more OAuth2 clients by following the same steps as above, just change the provider name and the configuration accordingly.
