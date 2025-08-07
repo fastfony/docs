@@ -2,6 +2,25 @@
 
 ## Create new project
 
+### With Composer
+
+You can create a new Fastfony project using Composer. We recommend creating a new development project on a local development machine and follow the [Go to production](for-developers/go-to-production) instructions to deploy it on a production server.
+
+With this method, no Git repository is created by default. You can initialize a Git repository later if needed.
+
+1. Open your terminal and navigate to the directory where you want to create your Fastfony project.
+2. Run the following command to create a new Fastfony project:
+```bash
+composer create-project fastfony/fastfony your-project-name
+```
+Replace `your-project-name` with the desired name for your project directory.
+3. Navigate to the newly created project directory:
+```bash
+cd your-project-name
+```
+
+### or with Github template
+
 We recommend creating a new development project on a local development machine and follow the [Go to production](for-developers/go-to-production) instructions to deploy it on a production server.
 
 1. Go on [Fastfony Github template link ](https://github.com/new?template_name=fastfony&template_owner=fastfony) in order to create your own repository from the template.
