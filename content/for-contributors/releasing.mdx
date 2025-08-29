@@ -1,0 +1,47 @@
+# Releasing Fastfony
+
+Fastfony follows the Symfony release cycle closely, ensuring compatibility and up-to-date features with each new Symfony version. This approach guarantees that Fastfony remains a reliable starter-kit for modern PHP 8 development.
+
+## Release Rhythm
+
+A new Fastfony version is released alongside each new Symfony release, with a short delay to allow for integration and testing. This ensures that the starter-kit always supports the latest stable Symfony version.
+
+## Release Process
+
+The process for creating a Fastfony release involves several steps to maintain quality and ensure proper distribution across all channels:
+
+1. **Merge Merge Requests (MRs) into the Active Version Branch**
+
+   - All relevant merge requests (MRs) are reviewed and merged into the current active branch (for example, `0.3`).
+
+2. **Change version number and tag the Release**
+
+   - A commit is added for edit the version number in `src/Kernel.php` and `packages/api_platform.yaml`.
+   - Once the branch is ready, a new Git tag is created on the active version branch.
+   - The tag uses the prefix `v` followed by the version number (e.g., `v0.3.3`).
+
+3. **Create the Release on GitHub**
+
+   - After tagging, a new release is published on [GitHub Releases](https://github.com/fastfony/fastfony/releases).
+   - The release includes notes, changelogs, and links to commits.
+
+4. **Merge into Future Version Branches**
+
+   - The changes from the active version branch (e.g., `0.3`) are merged into future version branches (e.g., `0.4`).
+   - This ensures that upcoming versions benefit from all updates and fixes.
+
+5. **Merge into `develop` and `main` Branches**
+
+   - **`develop`**:
+     - Merging into the `develop` branch allows for publishing on Packagist and enables the `composer create-project` feature for developers.
+   - **`main`**:
+     - Merging into the `main` branch triggers the Continuous Integration (CI) pipeline, which generates quality indicators and performs automated checks.
+
+## Summary
+
+- **Release cadence:** Follows Symfony releases.
+- **Merge workflow:** MRs → active branch → change version number → tag → GitHub release → future branches → `develop` → `main`.
+- **Distribution:** Updates available via GitHub, Packagist, and `composer create-project`.
+- **Quality assurance:** CI runs on the `main` branch after every release.
+
+This process ensures Fastfony remains robust, up-to-date, and ready for production use after every release.
