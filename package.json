@@ -12,12 +12,9 @@
         "dev": "next",
         "build": "next build",
         "start": "next start",
-        "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind"
+        "postbuild": "next-sitemap && pagefind --site .next/server/app --output-path public/_pagefind"
     },
     "devDependencies": {
         "pagefind": "^1.3.0"
-    },
-    "scripts": {
-        "postbuild": "next-sitemap"
     }
 }

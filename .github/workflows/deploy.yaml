@@ -23,9 +23,6 @@ jobs:
       - name: Build
         run: npm run build
         
-      - name: Generate sitemap and robots.txt (postbuild)
-        run: npm run postbuild
-        
       - name: Deploy to server
         uses: appleboy/scp-action@master
         with:
