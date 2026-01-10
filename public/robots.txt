@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://docs.fastfony.com
+
+# Sitemaps
+Sitemap: https://docs.fastfony.com/sitemap.xml
